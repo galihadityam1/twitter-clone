@@ -68,7 +68,7 @@ const resolversUser = {
           username,
           email,
           password,
-        }
+        };
         const result = await User.createOne(newUser);
         newUser._id = result.insertedId;
         newUser.password = delete newUser[password];
@@ -82,3 +82,5 @@ const resolversUser = {
 };
 
 module.exports = { typeDefsUser, resolversUser };
+
+//a
