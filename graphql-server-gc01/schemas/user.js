@@ -71,7 +71,7 @@ const resolversUser = {
         }
         const result = await User.createOne(newUser);
         newUser._id = result.insertedId;
-        newUser.password = delete newUser.password;
+        newUser.password = delete newUser[password];
 
         return newUser;
       } catch (error) {
