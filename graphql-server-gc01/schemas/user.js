@@ -1,15 +1,5 @@
 const { GraphQLError } = require("graphql");
 const User = require("../model/userModel");
-// const users = [
-//   {
-//     title: "The Awakening",
-//     author: "Kate Chopin",
-//   },
-//   {
-//     title: "City of Glass",
-//     author: "Paul Auster",
-//   },
-// ];
 
 const typeDefsUser = `#graphql
   type User {
@@ -17,6 +7,7 @@ const typeDefsUser = `#graphql
     name: String
     username: String
     email: String
+    password: String
   }
 
   type Query {
@@ -37,10 +28,12 @@ const resolversUser = {
     },
     userById: async (_, { _id }) => {
       try {
+        // console.log(_id);
         if (!_id) {
           throw new GraphQLError("Book ID is required");
         }
         const user = await User.findById(_id);
+        console.log(user);
         return user;
       } catch (error) {
         throw error;
