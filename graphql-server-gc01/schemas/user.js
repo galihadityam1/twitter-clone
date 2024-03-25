@@ -17,7 +17,6 @@ const typeDefsUser = `#graphql
     name: String
     username: String
     email: String
-    password: String
   }
 
   type Query {
@@ -71,7 +70,6 @@ const resolversUser = {
         };
         const result = await User.createOne(newUser);
         newUser._id = result.insertedId;
-        newUser.password = delete newUser[password];
 
         return newUser;
       } catch (error) {
@@ -82,5 +80,3 @@ const resolversUser = {
 };
 
 module.exports = { typeDefsUser, resolversUser };
-
-//a
