@@ -1,5 +1,6 @@
 const { GraphQLError } = require("graphql");
 const Post = require("../model/postModel");
+const { ObjectId } = require("mongodb");
 
 const typeDefsPosts = `#graphql
     type Comments {
@@ -33,7 +34,7 @@ const typeDefsPosts = `#graphql
     }
 
     type Mutation {
-        addPost(content: String, tags: [String], imgUrl: String, authorId: ID): Post
+        addPost(content: String, tags: [String], imgUrl: String): Post
     }
 `;
 
@@ -52,20 +53,20 @@ const resolversPosts = {
     },
   },
   Mutation: {
-    addPost: async (_, { content, tags, imgUrl, authorId }) => {
+    addPost: async (_, { content, tags, imgUrl }, { auth }) => {
       try {
-        const createdAt = new Date().toDateString();
-        const updatedAt = new Date().toDateString();
+        let data = auth();
+        let authorId = new ObjectId(String(data._id));
         const newPost = {
           content,
           tags,
           imgUrl,
           authorId,
-          createdAt,
-          updatedAt,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         };
         const result = await Post.createOne(newPost);
-        newPost._id = result._id;
+        newPost._id = result.insertedId;
 
         return newPost;
       } catch (error) {
