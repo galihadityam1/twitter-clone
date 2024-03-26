@@ -1,5 +1,7 @@
 const { GraphQLError } = require("graphql");
 const User = require("../model/userModel");
+const { signToken } = require("../helpers/jwt");
+const { comparePassword } = require("../helpers/bcrypt");
 
 const typeDefsUser = `#graphql
   type User {
@@ -8,7 +10,10 @@ const typeDefsUser = `#graphql
     username: String!
     email: String!
     password: String!
-    token: String
+  }
+
+  type Token {
+    accessToken: String
   }
 
   type Query {
@@ -18,19 +23,19 @@ const typeDefsUser = `#graphql
 
   type Mutation {
     addUser(name: String, username: String, email: String, password: String): User
-    loginUser(email: String, password: String): User
+    loginUser(email: String!, password: String!): Token
   },
 `;
 
 const resolversUser = {
   Query: {
-    users: async () => {
+    users: async (_, __, { auth }) => {
+      let data = auth()
       const users = await User.findAll();
       return users;
     },
     userById: async (_, { _id }) => {
       try {
-        // console.log(_id);
         if (!_id) {
           throw new GraphQLError("Book ID is required");
         }
@@ -71,27 +76,37 @@ const resolversUser = {
         throw error;
       }
     },
-    loginUser: async (_, {email, password}) => {
+    loginUser: async (_, { email, password }) => {
       try {
-        if(!email) {
+        // console.log(email);
+        if (!email) {
           throw new GraphQLError("Email is required");
         }
-        if(!password) {
+        if (!password) {
           throw new GraphQLError("Password is required");
         }
-
-        const userLogin = {
-          email,
-          password
+        const user = await User.loginUser(email);
+        // console.log(user);
+        if (!user) {
+          throw new Error("Email/Password is incorrect");
         }
-        await User.loginUser(userLogin);
+        const isMatch = await comparePassword(password, user.password);
+        if (!isMatch) {
+          throw new Error("Email/Password is incorrect");
+        }
+        const token = {
+          accessToken: signToken({ 
+            _id: user._id, 
+            email 
+          })
+        };
 
-        return userLogin
-      } catch(error) {
+        return token;
+      } catch (error) {
         console.log(error);
-        throw error
+        throw error;
       }
-    }
+    },
   },
 };
 
