@@ -9,16 +9,34 @@ class User {
     return database.collection("users");
   }
 
+  static followCollection() {
+    return database.collection("follows");
+  }
+
   static async findAll() {
     const users = await this.userCollection().find().toArray();
     return users;
   }
 
-  static async findById(id) {
-    const user = await this.userCollection().findOne({
-      _id: new ObjectId(String(id)),
-    });
-    return user;
+  static async findByName(name) {
+    try {
+      const agg = [
+        {
+          $match: {
+            name: name,
+          },
+        },
+        {
+          $project: {
+            password: 0,
+          },
+        },
+      ];
+      const cursor = this.userCollection().aggregate(agg);
+      const result = await cursor.toArray();
+    //   console.log(result);
+      return result[0];
+    } catch (error) {}
   }
 
   static async createOne(payload) {
@@ -60,52 +78,68 @@ class User {
 
   static async getFollow(_id) {
     try {
-        const agg = [
-            {
-              '$match': {
-                '_id': new ObjectId(String(_id))
-              }
-            }, {
-              '$lookup': {
-                'from': 'follows', 
-                'localField': '_id', 
-                'foreignField': 'followingId', 
-                'as': 'followers'
-              }
-            }, {
-              '$lookup': {
-                'from': 'users', 
-                'localField': 'followers.followerId', 
-                'foreignField': '_id', 
-                'as': 'followersDetail'
-              }
-            }, {
-              '$lookup': {
-                'from': 'follows', 
-                'localField': '_id', 
-                'foreignField': 'followerId', 
-                'as': 'followings'
-              }
-            }, {
-              '$lookup': {
-                'from': 'users', 
-                'localField': 'followings.followingId', 
-                'foreignField': '_id', 
-                'as': 'followingsDetail'
-              }
-            }, {
-              '$project': {
-                'password': 0, 
-                'followingsDetail.password': 0, 
-                'followersDetail.password': 0
-              }
-            }
-          ];
-          
-          const cursor = this.userCollection().aggregate(agg);
-          const result = await cursor.toArray();
-        //   console.log(result);
-          return result[0];
+      const agg = [
+        {
+          $match: {
+            _id: new ObjectId(String(_id)),
+          },
+        },
+        {
+          $lookup: {
+            from: "follows",
+            localField: "_id",
+            foreignField: "followingId",
+            as: "followers",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "followers.followerId",
+            foreignField: "_id",
+            as: "followersDetail",
+          },
+        },
+        {
+          $lookup: {
+            from: "follows",
+            localField: "_id",
+            foreignField: "followerId",
+            as: "followings",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "followings.followingId",
+            foreignField: "_id",
+            as: "followingsDetail",
+          },
+        },
+        {
+          $project: {
+            password: 0,
+            "followingsDetail.password": 0,
+            "followersDetail.password": 0,
+          },
+        },
+      ];
+
+      const cursor = this.userCollection().aggregate(agg);
+      const result = await cursor.toArray();
+      //   console.log(result);
+      return result[0];
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  static async followUser(newFollow) {
+    try {
+      let follow = await this.followCollection().insertOne(newFollow);
+
+      return follow;
     } catch (error) {
       console.log(error);
       throw error;

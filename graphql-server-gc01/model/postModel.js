@@ -1,31 +1,100 @@
 const { ObjectId } = require("mongodb");
-const { database } = require('../config/mongo');
+const { database } = require("../config/mongo");
 
 class Post {
-    static postCollection() {
-        return database.collection("posts");
-    }
+  static postCollection() {
+    return database.collection("posts");
+  }
 
-    static async findAll() {
-        const posts = await this.postCollection().find().toArray();
-        return posts;   
-    }
+  static async findAll() {
+    const posts = await this.postCollection().find().toArray();
+    return posts;
+  }
 
-    static async findById(id) { 
-        const post = await this.postCollection().findOne({
-            _id: new ObjectId(String(id))
-        });
-        return post;
-    }
+  static async findById(id) {
+    const post = await this.postCollection().findOne({
+      _id: new ObjectId(String(id)),
+    });
+    return post;
+  }
 
-    static async createOne(payload) {
-        try {
-            const newPost = await this.postCollection().insertOne(payload)
-            return newPost
-        } catch (error) {
-            
-        }
+  static async createOne(payload) {
+    try {
+      const newPost = await this.postCollection().insertOne(payload);
+      return newPost;
+    } catch (error) {
+      console.log(error);
     }
+  }
+
+  static async getUser({ _id }) {
+    try {
+        // console.log(_id);
+      const agg = [
+        {
+          $match: {
+            _id: new ObjectId(String(_id)),
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "authorDetail",
+          },
+        },
+        {
+          $project: {
+            "authorDetail.password": 0,
+          },
+        },
+      ];
+
+    
+      const cursor = this.postCollection().aggregate(agg);
+      const result = await cursor.toArray();
+    //   console.log(result);
+      return result[0]
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  static async addComment(newComment) {
+    try {
+      const { _id, content, username, createdAt, updatedAt } = newComment;
+      const agg = [
+        {
+          $match: {
+            _id: new ObjectId(String(_id)),
+          },
+        },
+        {
+          $group: {
+            _id: new ObjectId(String(_id)),
+            comments: {
+              $push: {
+                content: content,
+                username: username,
+                createdAt,
+                updatedAt,
+              },
+            },
+          },
+        },
+      ];
+
+      const cursor = this.postCollection().aggregate(agg);
+      const result = await cursor.toArray();
+
+      //   console.log(result);
+      return result[0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
-module.exports = Post
+module.exports = Post;

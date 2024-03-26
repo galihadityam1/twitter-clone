@@ -35,8 +35,9 @@ const typeDefsUser = `#graphql
 
   type Query {
     users: [User]
-    userById(_id: ID!): User
+    userByName(name: String): User
     getFollow: User
+
   }
 
   type Mutation {
@@ -52,12 +53,12 @@ const resolversUser = {
       const users = await User.findAll();
       return users;
     },
-    userById: async (_, { _id }) => {
+    userByName: async (_, { name }) => {
       try {
-        if (!_id) {
-          throw new GraphQLError("User ID is required");
+        if (!name) {
+          throw new GraphQLError("name is required");
         }
-        const user = await User.findById(_id);
+        const user = await User.findByName(name);
         // console.log(user);
         return user;
       } catch (error) {

@@ -3,6 +3,19 @@ const Post = require("../model/postModel");
 const { ObjectId } = require("mongodb");
 
 const typeDefsPosts = `#graphql
+    type Post {
+        _id: ID!
+        content: String
+        tags: [String]
+        imgUrl: String
+        authorId: ID
+        comments: [Comments]
+        likes: [Likes]
+        createdAt: String
+        updatedAt: String
+        authorDetail: [UserDetail]
+    }
+
     type Comments {
         content: String!
         username: String!
@@ -16,25 +29,23 @@ const typeDefsPosts = `#graphql
         updatedAt: String
     }
 
-    type Post {
-        _id: ID!
-        content: String!
-        tags: [String]
-        imgUrl: String
-        authorId: ID!
-        comments: [Comments]
-        likes: [Likes]
-        createdAt: String
-        updatedAt: String
-    }
+    type UserDetail {
+    _id: ID
+    email: String
+    name: String
+    username: String
+  }
 
     type Query {
         posts: [Post]
         postById(_id: ID!): Post
+        getUser(_id: ID!): Post
     }
 
     type Mutation {
         addPost(content: String!, tags: [String], imgUrl: String): Post
+        addComment(content: String, _id: ID): Post
+
     }
 `;
 
@@ -44,14 +55,30 @@ const resolversPosts = {
       const posts = await Post.findAll();
       return posts;
     },
-    postById: async (_, { _id }) => {
+    postById: async (_, { _id },{ auth }) => {
+      auth()
       if (!_id) {
         throw new GraphQLError("Post ID is required");
       }
       const post = await Post.findById(_id);
       return post;
     },
+    getUser: async (_, {_id}, {auth}) => {
+      try {
+        auth()
+        // console.log(_id);
+        if (!_id) {
+          throw new GraphQLError("Post ID is required");
+        }
+        const post = await Post.getUser({_id})
+        return post
+      } catch (error) {
+        console.log(error);
+        throw error
+      }
+    }
   },
+  
   Mutation: {
     addPost: async (_, { content, tags, imgUrl }, { auth }) => {
       try {
@@ -76,6 +103,24 @@ const resolversPosts = {
         throw error;
       }
     },
+    addComment: async (_, { content, _id }, { auth }) => {
+      try {
+        let data = auth()
+        let newComment = {
+          _id,
+          content,
+          username: data.username,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(), 
+        }
+        const result = await Post.addComment(newComment);
+        
+        return result;
+      } catch (error) {
+        console.log(error);
+        throw error
+      }
+    }
   },
 };
 
