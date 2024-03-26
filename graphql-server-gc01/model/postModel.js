@@ -20,7 +20,7 @@ class Post {
 
     static async createOne(payload) {
         try {
-            const newPost = await this.postCollection().insertOne({payload})
+            const newPost = await this.postCollection().insertOne(payload)
             return newPost
         } catch (error) {
             

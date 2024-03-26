@@ -18,10 +18,10 @@ const typeDefsPosts = `#graphql
 
     type Post {
         _id: ID!
-        content: String
+        content: String!
         tags: [String]
         imgUrl: String
-        authorId: ID
+        authorId: ID!
         comments: [Comments]
         likes: [Likes]
         createdAt: String
@@ -34,7 +34,7 @@ const typeDefsPosts = `#graphql
     }
 
     type Mutation {
-        addPost(content: String, tags: [String], imgUrl: String): Post
+        addPost(content: String!, tags: [String], imgUrl: String): Post
     }
 `;
 
@@ -62,8 +62,10 @@ const resolversPosts = {
           tags,
           imgUrl,
           authorId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          comments: [],
+          likes: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         };
         const result = await Post.createOne(newPost);
         newPost._id = result.insertedId;
