@@ -5,9 +5,10 @@ const typeDefsUser = `#graphql
   type User {
     _id: ID!
     name: String
-    username: String
-    email: String
-    password: String
+    username: String!
+    email: String!
+    password: String!
+    token: String
   }
 
   type Query {
@@ -17,6 +18,7 @@ const typeDefsUser = `#graphql
 
   type Mutation {
     addUser(name: String, username: String, email: String, password: String): User
+    loginUser(email: String, password: String): User
   },
 `;
 
@@ -69,6 +71,27 @@ const resolversUser = {
         throw error;
       }
     },
+    loginUser: async (_, {email, password}) => {
+      try {
+        if(!email) {
+          throw new GraphQLError("Email is required");
+        }
+        if(!password) {
+          throw new GraphQLError("Password is required");
+        }
+
+        const userLogin = {
+          email,
+          password
+        }
+        await User.loginUser(userLogin);
+
+        return userLogin
+      } catch(error) {
+        console.log(error);
+        throw error
+      }
+    }
   },
 };
 
