@@ -12,4 +12,4 @@ const client = new MongoClient(uri, {
 
 const database = client.db("hck-68")
 
-module.exports = {database};
+module.exports = {database, client};

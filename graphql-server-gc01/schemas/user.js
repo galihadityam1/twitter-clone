@@ -9,7 +9,24 @@ const typeDefsUser = `#graphql
     name: String
     username: String!
     email: String!
-    password: String!
+    password: String
+    followers: [Follow]
+    followersDetail: [UserDetail]
+    followings: [Follow]
+    followingsDetail: [UserDetail]
+  }
+
+  type Follow {
+    _id: ID
+    followerId: ID
+    followingId: ID
+  }
+
+  type UserDetail {
+    _id: ID
+    email: String
+    name: String
+    username: String
   }
 
   type Token {
@@ -19,11 +36,12 @@ const typeDefsUser = `#graphql
   type Query {
     users: [User]
     userById(_id: ID!): User
+    getFollow: User
   }
 
   type Mutation {
     addUser(name: String, username: String, email: String, password: String): User
-    loginUser(email: String!, password: String!): Token
+    loginUser(username: String!, password: String!): Token
   },
 `;
 
@@ -37,15 +55,29 @@ const resolversUser = {
     userById: async (_, { _id }) => {
       try {
         if (!_id) {
-          throw new GraphQLError("Book ID is required");
+          throw new GraphQLError("User ID is required");
         }
         const user = await User.findById(_id);
-        console.log(user);
+        // console.log(user);
         return user;
       } catch (error) {
         throw error;
       }
     },
+    getFollow: async (_, _args, { auth }) => {
+      try {
+        let data = auth()
+        let id = data._id
+        if (!id) {
+          throw new GraphQLError("User ID is required");
+        }
+        const user = await User.getFollow(id);
+        return user
+      } catch (error) {
+        console.log(error);
+        throw error
+      }
+    }
   },
   Mutation: {
     addUser: async (_, { name, username, email, password }) => {
@@ -76,28 +108,28 @@ const resolversUser = {
         throw error;
       }
     },
-    loginUser: async (_, { email, password }) => {
+    loginUser: async (_, { username, password }) => {
       try {
-        // console.log(email);
-        if (!email) {
-          throw new GraphQLError("Email is required");
+        // console.log(username);
+        if (!username) {
+          throw new GraphQLError("username is required");
         }
         if (!password) {
           throw new GraphQLError("Password is required");
         }
-        const user = await User.loginUser(email);
+        const user = await User.loginUser(username);
         // console.log(user);
         if (!user) {
-          throw new Error("Email/Password is incorrect");
+          throw new Error("Username/Password is incorrect");
         }
         const isMatch = await comparePassword(password, user.password);
         if (!isMatch) {
-          throw new Error("Email/Password is incorrect");
+          throw new Error("Username/Password is incorrect");
         }
         const token = {
           accessToken: signToken({ 
             _id: user._id, 
-            email 
+            username 
           })
         };
 
