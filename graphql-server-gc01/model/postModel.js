@@ -102,18 +102,19 @@ class Post {
     }
   }
 
-  static async addLike(id, like) {
+  static async addLike(id, likes) {
     try {
-      const postLiked = this.postCollection().find({
+        // console.log(like.username);
+      const postLiked = await this.postCollection().findOne({
         _id: new ObjectId(String(id)),
-        likes: { $match: { username: like.username } },
+        likes: {$elemMatch: { username: likes.username }}
       });
-      console.log(postLiked);
+    //   console.log(postLiked);
       if (postLiked) return new GraphQLError("Post already liked");
 
       let updated = await this.postCollection().updateOne(
         { _id: new ObjectId(String(id)) },
-        { $push: like },
+        { $push: {likes} },
         { returnOriginal: false }
       );
       //   console.log(updated);

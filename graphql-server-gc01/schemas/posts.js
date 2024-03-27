@@ -167,7 +167,7 @@ const resolversPosts = {
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
-        const result = await Post.addLike(_id, { likes: like });
+        const result = await Post.addLike(_id, like);
         // console.log(result);
 
         await redis.del('posts');
