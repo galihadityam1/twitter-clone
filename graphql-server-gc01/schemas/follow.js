@@ -19,7 +19,10 @@ const resolversFollow = {
   Mutation: {
     follow: async (_, args, { auth }) => {
       try {
-        let { _id } = auth();
+        let authen = auth();
+        if(!authen) throw new GraphQLError("Authentication required");
+
+        let { _id } = authen;
         const { idFollow } = args;
         const followingId = new ObjectId(String(idFollow));
         const followerId = new ObjectId(String(_id));

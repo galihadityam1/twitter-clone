@@ -14,7 +14,7 @@ const typeDefsPosts = `#graphql
         likes: [Likes]
         createdAt: String
         updatedAt: String
-        authorDetail: [UserDetail]
+        authorDetail: UserDetail
     }
 
     type Comments {
@@ -59,7 +59,8 @@ const resolversPosts = {
       return posts;
     },
     postById: async (_, { _id }, { auth }) => {
-      auth();
+      let data = auth();
+      if(!data) throw new GraphQLError("Authentication required");
       if (!_id) {
         throw new GraphQLError("Post ID is required");
       }
@@ -68,7 +69,8 @@ const resolversPosts = {
     },
     getUser: async (_, { _id }, { auth }) => {
       try {
-        auth();
+        let data = auth();
+        if(!data) throw new GraphQLError("Authentication required");
         // console.log(_id);
         if (!_id) {
           throw new GraphQLError("Post ID is required");
@@ -110,6 +112,7 @@ const resolversPosts = {
     addPost: async (_, { content, tags, imgUrl }, { auth }) => {
       try {
         let data = auth();
+        if(!data) throw new GraphQLError("Authentication required");
         let authorId = new ObjectId(String(data._id));
         const newPost = {
           content,
@@ -134,6 +137,8 @@ const resolversPosts = {
     addComment: async (_, { content, _id }, { auth }) => {
       try {
         let data = auth();
+        if(!data) throw new GraphQLError("Authentication required");
+        if(!content) throw new GraphQLError("Content is required");
         let newComment = {
           _id,
           content,
@@ -144,7 +149,7 @@ const resolversPosts = {
         const result = await Post.addComment(newComment);
         // newComment._id = result.insertedId;
         // console.log(result);
-
+        await redis.del('posts');
         return result;
       } catch (error) {
         console.log(error);
@@ -163,7 +168,9 @@ const resolversPosts = {
           updatedAt: new Date().toISOString(),
         };
         const result = await Post.addLike(_id, { likes: like });
-        console.log(result);
+        // console.log(result);
+
+        await redis.del('posts');
         return result;
       } catch (error) {
         console.log(error);

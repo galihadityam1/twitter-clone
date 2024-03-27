@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { database } = require("../config/mongo");
+const { GraphQLError } = require("graphql");
 
 class Post {
   static postCollection() {
@@ -103,19 +104,29 @@ class Post {
 
   static async addLike(id, like) {
     try {
-      await this.postCollection().updateOne(
+      const postLiked = this.postCollection().find({
+        _id: new ObjectId(String(id)),
+        likes: { $match: { username: like.username } },
+      });
+      console.log(postLiked);
+      if (postLiked) return new GraphQLError("Post already liked");
+
+      let updated = await this.postCollection().updateOne(
         { _id: new ObjectId(String(id)) },
         { $push: like },
         { returnOriginal: false }
       );
+      //   console.log(updated);
 
       let post = await this.postCollection().findOne({
         _id: new ObjectId(String(id)),
       });
+      //   console.log(post);
 
       return post;
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 
@@ -136,6 +147,11 @@ class Post {
           },
         },
         {
+          $unwind: {
+            path: "$authorDetail",
+          },
+        },
+        {
           $project: {
             "authorDetail.password": 0,
           },
@@ -144,7 +160,7 @@ class Post {
 
       const cursor = this.postCollection().aggregate(agg);
       const result = await cursor.toArray();
-      //   console.log(result);
+      // console.log(result);
       return result;
     } catch (error) {
       console.log(error);

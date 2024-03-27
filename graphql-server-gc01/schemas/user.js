@@ -55,8 +55,8 @@ const resolversUser = {
     },
     userByName: async (_, { name }, { auth }) => {
       try {
-        auth();
-
+        let data = auth();
+        if(!data) throw new GraphQLError("Authentication required");
         if (!name) {
           throw new GraphQLError("name is required");
         }
@@ -70,6 +70,7 @@ const resolversUser = {
     getFollow: async (_, _args, { auth }) => {
       try {
         let data = auth();
+        if(!data) throw new GraphQLError("Authentication required");
         let id = data._id;
         if (!id) {
           throw new GraphQLError("User ID is required");
