@@ -76,6 +76,7 @@ const resolversPosts = {
           throw new GraphQLError("Post ID is required");
         }
         const post = await Post.getUser({ _id });
+        
         return post;
       } catch (error) {
         console.log(error);
@@ -113,6 +114,9 @@ const resolversPosts = {
       try {
         let data = auth();
         if(!data) throw new GraphQLError("Authentication required");
+        if(!content || !tags || !imgUrl) {
+          throw new GraphQLError("Content, tags and imgUrl are required");
+        }
         let authorId = new ObjectId(String(data._id));
         const newPost = {
           content,

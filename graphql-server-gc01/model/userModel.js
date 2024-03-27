@@ -141,14 +141,21 @@ class User {
   static async followUser(newFollow) {
     try {
       const { followerId, followingId } = newFollow;
+
+      // user not found
       let findUser = await this.userCollection().findOne({ _id: new ObjectId(String(followingId)) });
       if (!findUser) throw new GraphQLError("User not Found")
+
+      // already follow
       let followed = await this.followCollection().findOne(newFollow);
       if (followed) throw new GraphQLError("Already following this user");
+
+      // follow myself
       let user = await this.userCollection().findOne({
         _id: new ObjectId(String(followerId)),
       });
       if (user) throw new GraphQLError("Cant follow yourself");
+
       let follow = await this.followCollection().insertOne(newFollow);
 
       return follow;

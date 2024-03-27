@@ -78,6 +78,9 @@ const resolversUser = {
         const user = await User.getFollow(id);
         return user;
       } catch (error) {
+        if(error.name === 'JsonWebTokenError') {
+          throw 'Invalid or expired token';
+        }
         console.log(error);
         throw error;
       }

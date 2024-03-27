@@ -24,6 +24,7 @@ const server = new ApolloServer({
           }
           const token = auth.split(' ')[1];
           const decoded = verifyToken(token);
+          
           return decoded
         }
       };

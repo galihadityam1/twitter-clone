@@ -24,6 +24,7 @@ const resolversFollow = {
 
         let { _id } = authen;
         const { idFollow } = args;
+        if(!idFollow) throw new GraphQLError("idFollow is required");
         const followingId = new ObjectId(String(idFollow));
         const followerId = new ObjectId(String(_id));
         const newFollow = {
