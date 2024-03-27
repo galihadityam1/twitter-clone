@@ -29,7 +29,6 @@ class Post {
 
   static async getUser({ _id }) {
     try {
-        // console.log(_id);
       const agg = [
         {
           $match: {
@@ -51,11 +50,10 @@ class Post {
         },
       ];
 
-    
       const cursor = this.postCollection().aggregate(agg);
       const result = await cursor.toArray();
-    //   console.log(result);
-      return result[0]
+      //   console.log(result);
+      return result[0];
     } catch (error) {
       console.log(error);
       throw error;
@@ -88,11 +86,55 @@ class Post {
 
       const cursor = this.postCollection().aggregate(agg);
       const result = await cursor.toArray();
+      await this.postCollection().updateOne(
+        { _id: new ObjectId(String(_id)) },
+        { $push: { comments: result[0].comments[0] } }
+      );
+      const post = await this.postCollection().findOne({
+        _id: new ObjectId(String(_id)),
+      });
 
-      //   console.log(result);
-      return result[0];
+      //   console.log(post);
+      return post;
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  static async addLike(id, like) {
+    try {
+      await this.postCollection().updateOne(
+        { _id: new ObjectId(String(id)) },
+        { $push: like },
+        { returnOriginal: false }
+      );
+
+      let post = await this.postCollection().findOne({
+        _id: new ObjectId(String(id)),
+      });
+
+      return post;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async sortByCreatedAt(){
+    try {
+        const agg = [
+            {
+              '$sort': {
+                'createdAt': -1
+              }
+            }
+          ];
+         
+          const cursor = this.postCollection().aggregate(agg);
+          const result = await cursor.toArray();
+        //   console.log(result);
+          return result
+    } catch (error) {
+        console.log(error);
     }
   }
 }

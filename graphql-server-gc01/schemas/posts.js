@@ -40,11 +40,13 @@ const typeDefsPosts = `#graphql
         posts: [Post]
         postById(_id: ID!): Post
         getUser(_id: ID!): Post
+        sortByCreatedAt: [Post]
     }
 
     type Mutation {
         addPost(content: String!, tags: [String], imgUrl: String): Post
         addComment(content: String, _id: ID): Post
+        addLike(_id: ID): Post
 
     }
 `;
@@ -76,9 +78,25 @@ const resolversPosts = {
         console.log(error);
         throw error
       }
+    },
+    sortByCreatedAt: async (_, _args, {auth}) => {
+      try {
+        let data = auth()
+        if(!data){
+          throw new GraphQLError("Authentication required")
+        }
+        const result = await Post.sortByCreatedAt()
+        // console.log(result);
+
+        return result
+
+      } catch (error) {
+        console.log(error);
+        throw error
+      }
     }
   },
-  
+
   Mutation: {
     addPost: async (_, { content, tags, imgUrl }, { auth }) => {
       try {
@@ -114,11 +132,31 @@ const resolversPosts = {
           updatedAt: new Date().toISOString(), 
         }
         const result = await Post.addComment(newComment);
+        // newComment._id = result.insertedId;
+        // console.log(result);
         
         return result;
       } catch (error) {
         console.log(error);
         throw error
+      }
+    },
+    addLike: async (_, {_id}, {auth}) => {
+      try {
+        let data = auth()
+        if(!data){
+          throw new GraphQLError("Login is required")
+        }
+        let like = {
+          username: data.username,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+        const result = await Post.addLike(_id, {likes: like});
+        console.log(result);
+        return result
+      } catch (error) {
+        console.log(error);
       }
     }
   },
