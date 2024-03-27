@@ -124,6 +124,7 @@ const resolversPosts = {
         const result = await Post.createOne(newPost);
         newPost._id = result.insertedId;
 
+        await redis.del('posts');
         return newPost;
       } catch (error) {
         console.log(error);

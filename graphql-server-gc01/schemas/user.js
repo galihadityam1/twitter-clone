@@ -49,12 +49,14 @@ const typeDefsUser = `#graphql
 const resolversUser = {
   Query: {
     users: async (_, __, { auth }) => {
-      let data = auth()
+      auth();
       const users = await User.findAll();
       return users;
     },
-    userByName: async (_, { name }) => {
+    userByName: async (_, { name }, { auth }) => {
       try {
+        auth();
+
         if (!name) {
           throw new GraphQLError("name is required");
         }
@@ -67,18 +69,18 @@ const resolversUser = {
     },
     getFollow: async (_, _args, { auth }) => {
       try {
-        let data = auth()
-        let id = data._id
+        let data = auth();
+        let id = data._id;
         if (!id) {
           throw new GraphQLError("User ID is required");
         }
         const user = await User.getFollow(id);
-        return user
+        return user;
       } catch (error) {
         console.log(error);
-        throw error
+        throw error;
       }
-    }
+    },
   },
   Mutation: {
     addUser: async (_, { name, username, email, password }) => {
@@ -94,6 +96,11 @@ const resolversUser = {
         }
         if (!password) {
           throw new GraphQLError("Password is required");
+        }
+        const validEmail =
+          /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/;
+        if (!email.match(validEmail)) {
+          throw new Error("Email must be formated (example@mail.com)");
         }
         const newUser = {
           name,
@@ -128,10 +135,10 @@ const resolversUser = {
           throw new Error("Username/Password is incorrect");
         }
         const token = {
-          accessToken: signToken({ 
-            _id: user._id, 
-            username 
-          })
+          accessToken: signToken({
+            _id: user._id,
+            username,
+          }),
         };
 
         return token;
