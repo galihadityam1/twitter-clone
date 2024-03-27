@@ -1,6 +1,7 @@
 const { GraphQLError } = require("graphql");
 const Post = require("../model/postModel");
 const { ObjectId } = require("mongodb");
+const redis = require("../config/redis");
 
 const typeDefsPosts = `#graphql
     type Post {
@@ -34,7 +35,7 @@ const typeDefsPosts = `#graphql
     email: String
     name: String
     username: String
-  }
+    }
 
     type Query {
         posts: [Post]
@@ -57,44 +58,52 @@ const resolversPosts = {
       const posts = await Post.findAll();
       return posts;
     },
-    postById: async (_, { _id },{ auth }) => {
-      auth()
+    postById: async (_, { _id }, { auth }) => {
+      auth();
       if (!_id) {
         throw new GraphQLError("Post ID is required");
       }
       const post = await Post.findById(_id);
       return post;
     },
-    getUser: async (_, {_id}, {auth}) => {
+    getUser: async (_, { _id }, { auth }) => {
       try {
-        auth()
+        auth();
         // console.log(_id);
         if (!_id) {
           throw new GraphQLError("Post ID is required");
         }
-        const post = await Post.getUser({_id})
-        return post
+        const post = await Post.getUser({ _id });
+        return post;
       } catch (error) {
         console.log(error);
-        throw error
+        throw error;
       }
     },
-    sortByCreatedAt: async (_, _args, {auth}) => {
+    sortByCreatedAt: async (_, _args, { auth }) => {
       try {
-        let data = auth()
-        if(!data){
-          throw new GraphQLError("Authentication required")
+        let data = auth();
+        if (!data) {
+          throw new GraphQLError("Authentication required");
         }
-        const result = await Post.sortByCreatedAt()
+        const redisPost = await redis.get("posts");
+        if (redisPost) {
+          console.log("dari redis");
+          return JSON.parse(redisPost);
+        } else {
+          console.log('dari mongoDB');
+          const result = await Post.sortByCreatedAt();
+          await redis.set("posts", JSON.stringify(result));
+          return result;
+        }
         // console.log(result);
 
-        return result
-
+        // return result;
       } catch (error) {
         console.log(error);
-        throw error
+        throw error;
       }
-    }
+    },
   },
 
   Mutation: {
@@ -123,42 +132,42 @@ const resolversPosts = {
     },
     addComment: async (_, { content, _id }, { auth }) => {
       try {
-        let data = auth()
+        let data = auth();
         let newComment = {
           _id,
           content,
           username: data.username,
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(), 
-        }
+          updatedAt: new Date().toISOString(),
+        };
         const result = await Post.addComment(newComment);
         // newComment._id = result.insertedId;
         // console.log(result);
-        
+
         return result;
       } catch (error) {
         console.log(error);
-        throw error
+        throw error;
       }
     },
-    addLike: async (_, {_id}, {auth}) => {
+    addLike: async (_, { _id }, { auth }) => {
       try {
-        let data = auth()
-        if(!data){
-          throw new GraphQLError("Login is required")
+        let data = auth();
+        if (!data) {
+          throw new GraphQLError("Login is required");
         }
         let like = {
           username: data.username,
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-        const result = await Post.addLike(_id, {likes: like});
+          updatedAt: new Date().toISOString(),
+        };
+        const result = await Post.addLike(_id, { likes: like });
         console.log(result);
-        return result
+        return result;
       } catch (error) {
         console.log(error);
       }
-    }
+    },
   },
 };
 

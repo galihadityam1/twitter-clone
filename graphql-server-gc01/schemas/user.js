@@ -35,7 +35,7 @@ const typeDefsUser = `#graphql
 
   type Query {
     users: [User]
-    userByName(name: String): User
+    userByName(name: String): [User]
     getFollow: User
 
   }

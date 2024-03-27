@@ -23,7 +23,9 @@ class User {
       const agg = [
         {
           $match: {
-            name: name,
+            name: {
+              $regex: name,
+            },
           },
         },
         {
@@ -34,8 +36,8 @@ class User {
       ];
       const cursor = this.userCollection().aggregate(agg);
       const result = await cursor.toArray();
-    //   console.log(result);
-      return result[0];
+      //   console.log(result);
+      return result;
     } catch (error) {}
   }
 

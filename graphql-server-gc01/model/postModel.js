@@ -119,22 +119,35 @@ class Post {
     }
   }
 
-  static async sortByCreatedAt(){
+  static async sortByCreatedAt() {
     try {
-        const agg = [
-            {
-              '$sort': {
-                'createdAt': -1
-              }
-            }
-          ];
-         
-          const cursor = this.postCollection().aggregate(agg);
-          const result = await cursor.toArray();
-        //   console.log(result);
-          return result
+      const agg = [
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "authorDetail",
+          },
+        },
+        {
+          $project: {
+            "authorDetail.password": 0,
+          },
+        },
+      ];
+
+      const cursor = this.postCollection().aggregate(agg);
+      const result = await cursor.toArray();
+      //   console.log(result);
+      return result;
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
   }
 }
