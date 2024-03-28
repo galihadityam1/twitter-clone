@@ -1,8 +1,12 @@
 import React from 'react'
+import { ScrollView, Text, View } from 'react-native'
+import CardComponent from '../components/CardComponent'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <ScrollView className="bg-blue-950 h-screen w-screen">
+        <CardComponent/>
+    </ScrollView>
   )
 }
 
