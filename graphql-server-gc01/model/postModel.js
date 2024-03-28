@@ -16,7 +16,7 @@ class Post {
     const post = await this.postCollection().findOne({
       _id: new ObjectId(String(id)),
     });
-    if(!post) throw new GraphQLError("Post not found");
+    if (!post) throw new GraphQLError("Post not found");
     return post;
   }
 
@@ -31,8 +31,10 @@ class Post {
 
   static async getUser({ _id }) {
     try {
-    const findPost = await this.postCollection().findOne({_id: new ObjectId(String(_id))});
-    if(!findPost) throw new GraphQLError("Post not found")
+      const findPost = await this.postCollection().findOne({
+        _id: new ObjectId(String(_id)),
+      });
+      if (!findPost) throw new GraphQLError("Post not found");
 
       const agg = [
         {
@@ -46,6 +48,11 @@ class Post {
             localField: "authorId",
             foreignField: "_id",
             as: "authorDetail",
+          },
+        },
+        {
+          $unwind: {
+            path: "$authorDetail",
           },
         },
         {
@@ -108,18 +115,18 @@ class Post {
 
   static async addLike(id, likes) {
     try {
-        if(!id || !likes) throw new GraphQLError("Id and likes are required");
-        // console.log(like.username);
+      if (!id || !likes) throw new GraphQLError("Id and likes are required");
+      // console.log(like.username);
       const postLiked = await this.postCollection().findOne({
         _id: new ObjectId(String(id)),
-        likes: {$elemMatch: { username: likes.username }}
+        likes: { $elemMatch: { username: likes.username } },
       });
-    //   console.log(postLiked);
+      //   console.log(postLiked);
       if (postLiked) return new GraphQLError("Post already liked");
 
       await this.postCollection().updateOne(
         { _id: new ObjectId(String(id)) },
-        { $push: {likes} },
+        { $push: { likes } },
         { returnOriginal: false }
       );
       //   console.log(updated);

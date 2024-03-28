@@ -60,7 +60,7 @@ const resolversPosts = {
     },
     postById: async (_, { _id }, { auth }) => {
       let data = auth();
-      if(!data) throw new GraphQLError("Authentication required");
+      if (!data) throw new GraphQLError("Authentication required");
       if (!_id) {
         throw new GraphQLError("Post ID is required");
       }
@@ -70,13 +70,13 @@ const resolversPosts = {
     getUser: async (_, { _id }, { auth }) => {
       try {
         let data = auth();
-        if(!data) throw new GraphQLError("Authentication required");
+        if (!data) throw new GraphQLError("Authentication required");
         // console.log(_id);
         if (!_id) {
           throw new GraphQLError("Post ID is required");
         }
         const post = await Post.getUser({ _id });
-        
+
         return post;
       } catch (error) {
         console.log(error);
@@ -94,7 +94,7 @@ const resolversPosts = {
           console.log("dari redis");
           return JSON.parse(redisPost);
         } else {
-          console.log('dari mongoDB');
+          console.log("dari mongoDB");
           const result = await Post.sortByCreatedAt();
           await redis.set("posts", JSON.stringify(result));
           return result;
@@ -113,8 +113,8 @@ const resolversPosts = {
     addPost: async (_, { content, tags, imgUrl }, { auth }) => {
       try {
         let data = auth();
-        if(!data) throw new GraphQLError("Authentication required");
-        if(!content || !tags || !imgUrl) {
+        if (!data) throw new GraphQLError("Authentication required");
+        if (!content || !tags || !imgUrl) {
           throw new GraphQLError("Content, tags and imgUrl are required");
         }
         let authorId = new ObjectId(String(data._id));
@@ -131,7 +131,7 @@ const resolversPosts = {
         const result = await Post.createOne(newPost);
         newPost._id = result.insertedId;
 
-        await redis.del('posts');
+        await redis.del("posts");
         return newPost;
       } catch (error) {
         console.log(error);
@@ -141,8 +141,8 @@ const resolversPosts = {
     addComment: async (_, { content, _id }, { auth }) => {
       try {
         let data = auth();
-        if(!data) throw new GraphQLError("Authentication required");
-        if(!content) throw new GraphQLError("Content is required");
+        if (!data) throw new GraphQLError("Authentication required");
+        if (!content) throw new GraphQLError("Content is required");
         let newComment = {
           _id,
           content,
@@ -153,7 +153,7 @@ const resolversPosts = {
         const result = await Post.addComment(newComment);
         // newComment._id = result.insertedId;
         // console.log(result);
-        await redis.del('posts');
+        await redis.del("posts");
         return result;
       } catch (error) {
         console.log(error);
@@ -174,7 +174,7 @@ const resolversPosts = {
         const result = await Post.addLike(_id, like);
         // console.log(result);
 
-        await redis.del('posts');
+        await redis.del("posts");
         return result;
       } catch (error) {
         console.log(error);
