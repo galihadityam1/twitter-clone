@@ -17,22 +17,16 @@ const Profile = () => {
         </View>
         <View className="h-32 flex flex-col">
           <View className="-my-7 z-10 px-4 flex items-center">
-            <View className="border rounded-full">
-              <Avatar
-                containerStyle={{ backgroundColor: "#BDBDBD" }}
-                rounded
-                size="large"
-                source={{
-                  uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIORJkokYPFOFVyvIuYDNhOz4x0h0njBhyPw&usqp=CAU",
-                }}
-                title="P"
-              />
-            </View>
+            <Avatar
+              containerStyle={{ backgroundColor: "#BDBDBD" }}
+              rounded
+              size="large"
+              source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIORJkokYPFOFVyvIuYDNhOz4x0h0njBhyPw&usqp=CAU" }}
+              title="P"
+            />
             <View className="flex flex-row">
               <Text className="text-white px-1 py-2">Kazuha</Text>
-              <Text className="text-white px-1 py-2 opacity-40">
-                @kazuha123
-              </Text>
+              <Text className="text-white px-1 py-2 opacity-30">@kazuha123</Text>
             </View>
           </View>
           <View className="flex flex-row justify-center items-center py-7">
@@ -41,9 +35,9 @@ const Profile = () => {
           </View>
         </View>
       </View>
-      <CardComponent />
-      <CardComponent />
-      <CardComponent />
+      <CardComponent/>
+      <CardComponent/>
+      <CardComponent/>
     </ScrollView>
   );
 };

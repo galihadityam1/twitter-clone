@@ -1,15 +1,20 @@
-import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
-import CardComponent from '../components/CardComponent'
+import React from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import CardComponent from "../components/CardComponent";
 
-const Home = () => {
+const Home = ({ navigation }) => {
+  const onPress = () => {
+    navigation.navigate("DetailPost");
+  };
   return (
     <ScrollView className="bg-blue-950 h-screen w-screen">
-        <CardComponent/>
-        <CardComponent/>
-        <CardComponent/>
+      <TouchableOpacity onPress={onPress}>
+        <CardComponent />
+      </TouchableOpacity>
+        <CardComponent />
+        <CardComponent />
     </ScrollView>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

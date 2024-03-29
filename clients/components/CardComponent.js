@@ -12,7 +12,7 @@ const CardComponent = () => {
           }} />
         </View>
         <View className="flex-1 p-2 px-3">
-          <Text className="font-semibold text-white">Name  <Text className="font-normal text-gray-300 opacity-40">@Username</Text></Text>
+          <Text className="font-semibold text-white">Name  <Text className="font-normal text-gray-300 opacity-30">@Username</Text></Text>
           
           <Text className="text-white font-light py-1">
             What Is Lorem Ipsum and Why Is It Used? - Solopress UK Lorem Ipsum,
