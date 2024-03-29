@@ -6,6 +6,8 @@ const Home = () => {
   return (
     <ScrollView className="bg-blue-950 h-screen w-screen">
         <CardComponent/>
+        <CardComponent/>
+        <CardComponent/>
     </ScrollView>
   )
 }

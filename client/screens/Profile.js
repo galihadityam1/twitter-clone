@@ -11,7 +11,7 @@ const Profile = () => {
           <Image
             className="w-full h-40"
             source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUto7lJwM9PaOmg6aRKGx5GDvVqWeS_gQWvnuwOTowCTNC1xmo8lF8oz_q3Q&s",
+              uri: "https://www.allkpop.com/upload/2023/07/content/092005/1688947522-befunky-collage-2023-07-09t190517.jpg",
             }}
           />
         </View>
@@ -35,6 +35,8 @@ const Profile = () => {
           </View>
         </View>
       </View>
+      <CardComponent/>
+      <CardComponent/>
       <CardComponent/>
     </ScrollView>
   );
