@@ -1,7 +1,8 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-const CommentComponent = () => {
+const CommentComponent = ({comment}) => {
+    // console.log(comment);
   return (
     <>
         <View className="flex justify-center px-7 py-4 border-b w-screen">

@@ -2,6 +2,7 @@ import { Image, ScrollView, Text, View } from "react-native";
 import { Card } from "react-native-elements";
 
 const CardComponent = ({ post, id }) => {
+  // console.log();
   return (
     <>
       <View className="bg-blue-950 p-7 py-4 border">
@@ -35,9 +36,9 @@ const CardComponent = ({ post, id }) => {
           </View>
         </View>
         <View className=" flex w-90 px-3 justify-between items-center flex-row">
-          <Text className="text-white">Comments ({post.comments.length})</Text>
-          <Text className="text-white">Likes ({post.likes.length})</Text>
-          <Text className="text-white">Tags ({post.tags.length})</Text>
+          <Text className="text-gray-300 opacity-60">Comments ({post.comments.length})</Text>
+          <Text className="text-gray-300 opacity-60">Likes ({post.likes.length})</Text>
+          <Text className="text-gray-300 opacity-60">Tags ({post.tags.length})</Text>
         </View>
       </View>
     </>

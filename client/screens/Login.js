@@ -2,18 +2,12 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
 import { Button } from "@rneui/themed";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { gql, useMutation } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
 import { useContext, useState } from "react";
 import AuthContext from "../context/auth";
+import { gql, useMutation } from "@apollo/client";
+import LOGIN from "../query/LOGIN";
 
-const LOGIN = gql`
-  mutation Mutation($username: String!, $password: String!) {
-    loginUser(username: $username, password: $password) {
-      accessToken
-    }
-  }
-`;
 
 const Login = ({ navigation }) => {
   const { isSignIn, setIsSignIn } = useContext(AuthContext)

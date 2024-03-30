@@ -2,40 +2,11 @@ import React, { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import CardComponent from "../components/CardComponent";
 import { gql, useQuery } from "@apollo/client";
-const GET_POST = gql`
-  query Query {
-    sortByCreatedAt {
-      content
-      tags
-      imgUrl
-      authorId
-      comments {
-        content
-        username
-        createdAt
-        updatedAt
-      }
-      likes {
-        username
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-      authorDetail {
-        _id
-        email
-        name
-        username
-      }
-      _id
-    }
-  }
-`;
+import GET_POST from "../query/GET_POST";
 
 const Home = ({ navigation }) => {
   const { loading, error, data } = useQuery(GET_POST);
-  //   console.log(post);
+    console.log(data);
   const onPress = (id) => {
     // console.log(id);
     navigation.navigate("DetailPost", {id});
