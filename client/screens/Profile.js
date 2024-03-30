@@ -3,7 +3,7 @@ import { ScrollView, Text, View } from "react-native";
 import { Avatar, Image } from "react-native-elements";
 import CardComponent from "../components/CardComponent";
 
-const Profile = () => {
+const Profile = ({navigation}) => {
   return (
     <ScrollView className="bg-blue-950 h-screen w-screen">
       <View className="border-y border-neutral-400">

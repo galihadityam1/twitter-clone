@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import HomeScreen from "../screens/Home";
 import Profile from "../screens/Profile";
+import Login from "../screens/Login";
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -33,6 +34,21 @@ const TabNavigator = () => {
         component={Profile}
         options={{
           title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="account-circle"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Login"
+        component={Login}
+        options={{
+          title: "Login",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons

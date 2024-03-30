@@ -1,9 +1,41 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
 import { Button } from "@rneui/themed";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { gql, useMutation } from "@apollo/client";
+import * as SecureStore from "expo-secure-store";
+import { useState } from "react";
 
-const Login = () => {
+const LOGIN = gql`
+  mutation Mutation($username: String!, $password: String!) {
+    loginUser(username: $username, password: $password) {
+      accessToken
+    }
+  }
+`;
+
+const Login = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginFunction, { error, loading, data }] = useMutation(LOGIN, {
+    onCompleted: async (data) => {
+      await SecureStore.setItemAsync(
+        "accessToken",
+        data?.loginUser.accessToken
+      );
+    },
+  });
+
+  const handleLogin = async () => {
+    try {
+      await loginFunction({
+        variables: { username, password },
+      });
+      // console.log('masuk');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <View className="flex flex-col items-center p-4 bg-slate-300 h-screen">
       <View className="container max-w-full mx-auto py-24 px-6">
@@ -21,17 +53,33 @@ const Login = () => {
                   <View className="gap-4 w-screen mr-8 px-10 h-80 justify-center">
                     <Input
                       label="Sign In First"
+                      autoCapitalize={false}
                       leftIcon={<Icon name="account-outline" size={20} />}
                       placeholder="Enter Username"
+                      onChangeText={setUsername}
+                      value={username}
                     />
                     <Input
                       leftIcon={<Icon name="key" size={20} />}
+                      autoCapitalize={false}
                       placeholder="Enter Password"
+                      onChangeText={setPassword}
+                      value={password}
                     />
-                    <Button title={"Submit"} />
+                    <Button title={"Login"} onPress={handleLogin} />
                   </View>
                   <View className="w-80 items-center justify-center flex h-6 mr-8">
-                    <Text>Don't You Have an Account? <Text className="text-blue-700 hover:underline">Sign Up</Text></Text>
+                    <Text>
+                      Don't You Have an Account?{" "}
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("Register");
+                        }}>
+                        <Text className="text-blue-700 hover:underline">
+                          Sign Up
+                        </Text>
+                      </TouchableOpacity>
+                    </Text>
                   </View>
                 </View>
               </View>

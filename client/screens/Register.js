@@ -1,4 +1,4 @@
-import { View, Text, Linking } from "react-native";
+import { View, Text, Linking, TouchableOpacity } from "react-native";
 import { Input } from "react-native-elements";
 import { Button } from "@rneui/themed";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -13,7 +13,7 @@ const OpenLoginPage = ({children}) => {
   
     return <Button title="Login" onPress={Login} />;
   };
-const Register = () => {
+const Register = ({navigation}) => {
   return (
     <View className="flex flex-col items-center p-4 bg-slate-300 h-screen">
     <View className="container max-w-full mx-auto py-24 px-6">
@@ -49,7 +49,13 @@ const Register = () => {
                   <Button title={"Submit"} />
                 </View>
                 <View className="w-80 items-center justify-center flex h-6 mr-8">
-                  <Text>Already Have an Account? <Text className="text-blue-700 hover:underline">Login</Text></Text>
+                  <Text>Already Have an Account?{" "}<TouchableOpacity onPress={() => {
+                        navigation.navigate("Login")
+                      }}>
+                        <Text className="text-blue-700 hover:underline">
+                         Login
+                        </Text>
+                      </TouchableOpacity></Text>
                 </View>
               </View>
             </View>
