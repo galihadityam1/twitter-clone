@@ -4,7 +4,8 @@ import { Button } from "@rneui/themed";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { gql, useMutation } from "@apollo/client";
 import * as SecureStore from "expo-secure-store";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import AuthContext from "../context/auth";
 
 const LOGIN = gql`
   mutation Mutation($username: String!, $password: String!) {
@@ -15,6 +16,8 @@ const LOGIN = gql`
 `;
 
 const Login = ({ navigation }) => {
+  const { isSignIn, setIsSignIn } = useContext(AuthContext)
+  // console.log(isSignIn);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginFunction, { error, loading, data }] = useMutation(LOGIN, {
@@ -22,7 +25,8 @@ const Login = ({ navigation }) => {
       await SecureStore.setItemAsync(
         "accessToken",
         data?.loginUser.accessToken
-      );
+        );
+        setIsSignIn(true)
     },
   });
 
@@ -31,7 +35,7 @@ const Login = ({ navigation }) => {
       await loginFunction({
         variables: { username, password },
       });
-      // console.log('masuk');
+      console.log('masuk');
     } catch (error) {
       console.log(error);
     }

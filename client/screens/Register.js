@@ -3,16 +3,11 @@ import { Input } from "react-native-elements";
 import { Button } from "@rneui/themed";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Ion from "react-native-vector-icons/Ionicons";
-import { useCallback } from "react";
-import Login from "./Login";
+// import {gql, useMutation} from "@apollo/client"
+// const REGIS =  gql`
 
-const OpenLoginPage = ({children}) => {
-    const handlePress = useCallback(async () => {
-      await Linking.Login();
-    }, []);
-  
-    return <Button title="Login" onPress={Login} />;
-  };
+// `
+
 const Register = ({navigation}) => {
   return (
     <View className="flex flex-col items-center p-4 bg-slate-300 h-screen">

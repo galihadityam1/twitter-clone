@@ -29,9 +29,11 @@ const StackNavigator = () => {
           headerRight: () => {
             return (
               <Button
-                title="Submit"
-                onPress={() => {
-                  Alert.alert("Masuk");
+                title="Logout"
+                onPress={ async () => {
+                  await SecureStorage.deleteItemAsync("accessToken")
+                  setIsSignIn(false)
+                  console.log("udh di delete", isSignIn);
                 }}
               />
             );
