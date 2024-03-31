@@ -1,5 +1,7 @@
 const { ObjectId } = require("mongodb");
 const User = require("../model/userModel");
+const { GraphQLError } = require("graphql");
+
 
 const typeDefsFollow = `#graphql
     type Follow {
