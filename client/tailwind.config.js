@@ -9,6 +9,7 @@ module.exports = {
     "./screens/Profile.js",
     "./screens/DetailPost.js",
     "./components/CommentComponent.js",
+    "./components/CardProfileComponent.js",
   ],
   theme: {
     extend: {},

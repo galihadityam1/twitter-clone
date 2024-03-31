@@ -1,46 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import CardComponent from "../components/CardComponent";
 import CommentComponent from "../components/CommentComponent";
-import { gql, useQuery } from "@apollo/client";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-const GET_DETAIL = gql`
-  query Query($id: ID!) {
-    getUser(_id: $id) {
-      _id
-      content
-      tags
-      imgUrl
-      authorId
-      comments {
-        content
-        username
-        createdAt
-        updatedAt
-      }
-      likes {
-        username
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-      authorDetail {
-        _id
-        email
-        name
-        username
-      }
-    }
-  }
-`;
+import { gql, useQuery, useMutation } from "@apollo/client";
+import GET_DETAIL from "../query/GET_DETAIL";
+import { Icon, Input } from "react-native-elements";
+import POST_COMMENT from "../query/POST_COMMENT";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const DetailPost = ({ route }) => {
+  const [comment, setComment] = useState("");
   const { id } = route.params;
-  const { loading, data, error } = useQuery(GET_DETAIL, {
+  const get_detail = useQuery(GET_DETAIL, {
     variables: { id },
   });
-  if (loading) {
+
+  const loadingDetail = get_detail.loading
+  const errorDetail = get_detail.error
+  const dataDetail = get_detail.data
+  if (loadingDetail) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color={Colors.primary} />
@@ -48,16 +27,50 @@ const DetailPost = ({ route }) => {
     );
   }
 
-  if (error) {
+  if (errorDetail) {
     return <Text>Error: {error.message}</Text>;
   }
+
+//   const [commentFunction, {error, loading, data}] = useMutation(POST_COMMENT, {
+//     onCompleted: async(data)=> {
+
+//     }
+//     })     
+  
+
+//   const handleComment = async () => {
+//     try {
+//           console.log(data); 
+//     } catch (error) {
+//         console.log(error);
+//     }
+//   }
   return (
-    <ScrollView className="bg-blue-950 h-screen w-screen">
-      <CardComponent post={data.getUser} />
-      {data.getUser.comments.map((comment) => (
-      <CommentComponent comment={comment}/>
-      ))}
-    </ScrollView>
+    <>
+      <ScrollView className="bg-blue-950 h-screen w-screen">
+        <CardComponent post={dataDetail.getUser} />
+        {dataDetail.getUser.comments.map((comment) => (
+          <>
+            <CommentComponent comment={comment} />
+          </>
+        ))}
+      </ScrollView>
+      <View
+        style={{ position: "absolute", left: 0, right: 0, bottom: 0 }}
+        className="bg-white p-5">
+        <Input
+          className="p-2"
+          leftIcon={<Icon name="comment" size={20} />}
+          autoCapitalize={false}
+          placeholder="Comment"
+          onChangeText={setComment}
+          value={comment}
+          rightIcon={
+          <Icon name="send" size={20} />
+          }
+        />
+      </View>
+    </>
   );
 };
 

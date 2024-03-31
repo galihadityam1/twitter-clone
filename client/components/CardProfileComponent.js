@@ -1,8 +1,10 @@
 import { Image, ScrollView, Text, View } from "react-native";
 import { Card } from "react-native-elements";
 
-const CardComponent = ({ post, id }) => {
-  // console.log();
+const CardProfileComponent = ({ post, name, username }) => {
+  console.log(post);
+  console.log(name);
+  console.log(username);
   return (
     <>
       <View className="bg-blue-950 p-7 py-4 border">
@@ -17,10 +19,10 @@ const CardComponent = ({ post, id }) => {
           </View>
         <View className="flex-1 p-2 px-3">
             <Text className="font-semibold text-white">
-              {post.authorDetail.name}
+              {name}
               {"  "}
               <Text className="font-normal text-gray-300 opacity-40">
-                {post.authorDetail.username}
+                {username}
               </Text>
             </Text>
 
@@ -45,4 +47,4 @@ const CardComponent = ({ post, id }) => {
   );
 };
 
-export default CardComponent;
+export default CardProfileComponent;

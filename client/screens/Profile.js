@@ -1,9 +1,27 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { Avatar, Image } from "react-native-elements";
 import CardComponent from "../components/CardComponent";
+import { useQuery } from "@apollo/client";
+import GET_PROFILE from "../query/GET_PROFILE";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import CardProfileComponent from "../components/CardProfileComponent";
 
-const Profile = ({navigation}) => {
+const Profile = ({ navigation }) => {
+  // const { user } = useAuth
+  const {loading, error, data} = useQuery(GET_PROFILE)
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  // if (error) {
+  //   return <Text>Error: {error.message}</Text>;
+  // }
+  // console.log(data);
   return (
     <ScrollView className="bg-blue-950 h-screen w-screen">
       <View className="border-y border-neutral-400">
@@ -29,9 +47,9 @@ const Profile = ({navigation}) => {
               />
             </View>
             <View className="flex flex-row">
-              <Text className="text-white px-1 py-2">Kazuha</Text>
+              <Text className="text-white px-1 py-2">{data.myProfile.name}</Text>
               <Text className="text-white px-1 py-2 opacity-40">
-                @kazuha123
+                @{data.myProfile.username}
               </Text>
             </View>
           </View>
@@ -41,9 +59,9 @@ const Profile = ({navigation}) => {
           </View>
         </View>
       </View>
-      <CardComponent />
-      <CardComponent />
-      <CardComponent />
+      {data?.myProfile.userPost.map((post, i) => (
+        <CardProfileComponent post={post} name={data.myProfile.name} username={data.myProfile.username}/>
+      ))}
     </ScrollView>
   );
 };
