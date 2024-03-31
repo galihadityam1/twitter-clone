@@ -71,7 +71,7 @@ const resolversUser = {
         let data = auth();
         if(!data) throw new GraphQLError("Authentication required");
         if (!name) {
-          throw new GraphQLError("name is required");
+          throw new Error("name is required");
         }
         const user = await User.findByName(name);
         // console.log(user);
