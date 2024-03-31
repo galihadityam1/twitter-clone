@@ -30,8 +30,42 @@ class User {
           },
         },
         {
+          $lookup: {
+            from: "follows",
+            localField: "_id",
+            foreignField: "followingId",
+            as: "followers",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "followers.followerId",
+            foreignField: "_id",
+            as: "followersDetail",
+          },
+        },
+        {
+          $lookup: {
+            from: "follows",
+            localField: "_id",
+            foreignField: "followerId",
+            as: "followings",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "followings.followingId",
+            foreignField: "_id",
+            as: "followingsDetail",
+          },
+        },
+        {
           $project: {
             password: 0,
+            "followingsDetail.password": 0,
+            "followersDetail.password": 0,
           },
         },
       ];
@@ -143,8 +177,10 @@ class User {
       const { followerId, followingId } = newFollow;
 
       // user not found
-      let findUser = await this.userCollection().findOne({ _id: new ObjectId(String(followingId)) });
-      if (!findUser) throw new GraphQLError("User not Found")
+      let findUser = await this.userCollection().findOne({
+        _id: new ObjectId(String(followingId)),
+      });
+      if (!findUser) throw new GraphQLError("User not Found");
 
       // already follow
       let followed = await this.followCollection().findOne(newFollow);
@@ -216,9 +252,9 @@ class User {
           from: "posts",
           localField: "_id",
           foreignField: "authorId",
-          as: "userPost"
-        }
-      }
+          as: "userPost",
+        },
+      },
     ];
     const cursor = this.userCollection().aggregate(agg);
     const result = await cursor.toArray();
