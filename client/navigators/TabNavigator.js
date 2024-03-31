@@ -4,6 +4,8 @@ import HomeScreen from "../screens/Home";
 import Profile from "../screens/Profile";
 import Login from "../screens/Login";
 import { useContext } from "react";
+import { Fontisto } from '@expo/vector-icons';
+import SearchScreen from "../screens/SearchScreen";
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -29,6 +31,17 @@ const TabNavigator = () => {
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: "Search",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Fontisto name="search" size={20} color={color} />
           ),
         }}
       />

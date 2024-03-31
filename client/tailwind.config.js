@@ -8,7 +8,9 @@ module.exports = {
     "./components/CardComponent.js",
     "./screens/Profile.js",
     "./screens/DetailPost.js",
+    "./screens/SearchScreen.js",
     "./components/CommentComponent.js",
+    "./components/ProfileCard.js",
     "./components/CardProfileComponent.js",
   ],
   theme: {

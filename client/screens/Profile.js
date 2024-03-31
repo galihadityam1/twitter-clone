@@ -8,7 +8,6 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import CardProfileComponent from "../components/CardProfileComponent";
 
 const Profile = ({ navigation }) => {
-  // const { user } = useAuth
   const {loading, error, data} = useQuery(GET_PROFILE)
   if (loading) {
     return (

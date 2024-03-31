@@ -7,7 +7,6 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const Home = ({ navigation }) => {
   const { loading, error, data } = useQuery(GET_POST);
-  console.log("apapun");
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -19,9 +18,7 @@ const Home = ({ navigation }) => {
   if (error) {
     return <Text>Error: {error.message}</Text>;
   }
-    console.log(data);
   const onPress = (id) => {
-    // console.log(id);
     navigation.navigate("DetailPost", {id});
   };
   return (

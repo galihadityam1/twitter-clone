@@ -6,8 +6,11 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import GET_DETAIL from "../query/GET_DETAIL";
 import { Icon, Input } from "react-native-elements";
-import POST_COMMENT from "../query/POST_COMMENT";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
+import ADD_COMMENT from "../query/ADD_COMMENT";
 
 const DetailPost = ({ route }) => {
   const [comment, setComment] = useState("");
@@ -16,9 +19,8 @@ const DetailPost = ({ route }) => {
     variables: { id },
   });
 
-  const loadingDetail = get_detail.loading
-  const errorDetail = get_detail.error
-  const dataDetail = get_detail.data
+  const loadingDetail = get_detail.loading;
+  const dataDetail = get_detail.data;
   if (loadingDetail) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -27,24 +29,24 @@ const DetailPost = ({ route }) => {
     );
   }
 
-  if (errorDetail) {
-    return <Text>Error: {error.message}</Text>;
+  const [commentPost, { loading }] = useMutation(ADD_COMMENT, {
+    variables: {
+      content: comment,
+      id: dataDetail.getUser._id,
+    },
+    refetchQueries: [
+      { query: GET_DETAIL, variables: { id: dataDetail.getUser._id } },
+    ],
+  });
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
   }
 
-//   const [commentFunction, {error, loading, data}] = useMutation(POST_COMMENT, {
-//     onCompleted: async(data)=> {
-
-//     }
-//     })     
-  
-
-//   const handleComment = async () => {
-//     try {
-//           console.log(data); 
-//     } catch (error) {
-//         console.log(error);
-//     }
-//   }
   return (
     <>
       <ScrollView className="bg-blue-950 h-screen w-screen">
@@ -66,7 +68,15 @@ const DetailPost = ({ route }) => {
           onChangeText={setComment}
           value={comment}
           rightIcon={
-          <Icon name="send" size={20} />
+            <GestureHandlerRootView>
+              <TouchableOpacity
+                onPress={() => {
+                  commentPost();
+                  setComment("");
+                }}>
+                <Icon name="send" size={20} />
+              </TouchableOpacity>
+            </GestureHandlerRootView>
           }
         />
       </View>
