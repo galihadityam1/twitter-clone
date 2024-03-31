@@ -14,7 +14,20 @@ const typeDefsUser = `#graphql
     followersDetail: [UserDetail]
     followings: [Follow]
     followingsDetail: [UserDetail]
-  }
+    userPost: [UserPost]
+    }
+
+    type UserPost {
+    _id: ID
+    content: String!
+    tags: [String]
+    imgUrl: String!
+    authorId: ID!
+    comments: [Comments]
+    likes: [Likes]
+    createdAt: String
+    updatedAt: String
+    }
 
   type Follow {
     _id: ID
@@ -37,7 +50,7 @@ const typeDefsUser = `#graphql
     users: [User]
     userByName(name: String): [User]
     getFollow: User
-
+    myProfile: User
   }
 
   type Mutation {
@@ -84,6 +97,11 @@ const resolversUser = {
         console.log(error);
         throw error;
       }
+    },
+    myProfile: async (_, __, { auth }) => {
+      const data = auth();
+      const myProfile = await User.myProfile(data._id);
+      return myProfile;
     },
   },
   Mutation: {

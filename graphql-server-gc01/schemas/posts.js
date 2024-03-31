@@ -15,7 +15,7 @@ const typeDefsPosts = `#graphql
         createdAt: String
         updatedAt: String
         authorDetail: UserDetail
-    }
+       }
 
     type Comments {
         content: String!
