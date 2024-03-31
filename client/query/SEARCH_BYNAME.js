@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 const SEARCH_BYNAME = gql`
-  query Query($name: String) {
+  query UserByName($name: String) {
   userByName(name: $name) {
     _id
     name
@@ -17,6 +17,26 @@ const SEARCH_BYNAME = gql`
       _id
       followerId
       followingId
+      createdAt
+      updatedAt
+    }
+    userPost {
+      _id
+      content
+      tags
+      imgUrl
+      authorId
+      comments {
+        content
+        username
+        createdAt
+        updatedAt
+      }
+      likes {
+        username
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }

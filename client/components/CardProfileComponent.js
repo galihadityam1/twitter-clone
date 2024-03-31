@@ -2,9 +2,6 @@ import { Image, ScrollView, Text, View } from "react-native";
 import { Card } from "react-native-elements";
 
 const CardProfileComponent = ({ post, name, username }) => {
-  console.log(post);
-  console.log(name);
-  console.log(username);
   return (
     <>
       <View className="bg-blue-950 p-7 py-4 border">

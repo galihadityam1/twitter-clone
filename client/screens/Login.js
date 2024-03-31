@@ -8,9 +8,8 @@ import AuthContext from "../context/auth";
 import { gql, useMutation } from "@apollo/client";
 import LOGIN from "../query/LOGIN";
 
-
 const Login = ({ navigation }) => {
-  const { isSignIn, setIsSignIn } = useContext(AuthContext)
+  const { isSignIn, setIsSignIn } = useContext(AuthContext);
   // console.log(isSignIn);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +18,8 @@ const Login = ({ navigation }) => {
       await SecureStore.setItemAsync(
         "accessToken",
         data?.loginUser.accessToken
-        );
-        setIsSignIn(true)
+      );
+      setIsSignIn(true);
     },
   });
 
@@ -29,14 +28,14 @@ const Login = ({ navigation }) => {
       await loginFunction({
         variables: { username, password },
       });
-      console.log('masuk');
+      console.log("masuk");
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <View className="flex flex-col items-center p-4 bg-slate-300 h-screen">
-      <View className="container max-w-full mx-auto py-24 px-6">
+      <View className="container max-w-full mx-auto py-24">
         <View className="max-w-sm mx-auto px-6">
           <View className="relative flex flex-wrap">
             <View className="w-full relative">
@@ -45,10 +44,10 @@ const Login = ({ navigation }) => {
                   <Icon name="paw" size={30} color={"blue"} />
                 </View>
                 <View className="text-center items-center gap-4 flex">
-                  <Text className="font-semibold text-black text-2xl px-10 w-80">
+                  <Text className="font-semibold text-black text-2xl px-14 w-80">
                     Welcome to Twittor
                   </Text>
-                  <View className="gap-4 w-screen mr-8 px-10 h-80 justify-center">
+                  <View className="gap-4 w-screen mr-10 px-10 h-80 justify-center">
                     <Input
                       label="Sign In First"
                       autoCapitalize={false}
@@ -64,7 +63,9 @@ const Login = ({ navigation }) => {
                       onChangeText={setPassword}
                       value={password}
                     />
-                    <Button title={"Login"} onPress={handleLogin} />
+                    <View className="mr-6">
+                      <Button title={"Login"} onPress={handleLogin} />
+                    </View>
                   </View>
                   <View className="w-80 items-center justify-center flex h-6 mr-8">
                     <Text>

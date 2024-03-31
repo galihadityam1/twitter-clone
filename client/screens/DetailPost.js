@@ -19,15 +19,15 @@ const DetailPost = ({ route }) => {
     variables: { id },
   });
 
-  const loadingDetail = get_detail.loading;
+//   const loadingDetail = get_detail.loading;
   const dataDetail = get_detail.data;
-  if (loadingDetail) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
+//   if (loadingDetail) {
+//     return (
+//       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+//         <ActivityIndicator size="large" color={Colors.primary} />
+//       </View>
+//     );
+//   }
 
   const [commentPost, { loading }] = useMutation(ADD_COMMENT, {
     variables: {

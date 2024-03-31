@@ -6,6 +6,7 @@ import Login from "../screens/Login";
 import { useContext } from "react";
 import { Fontisto } from '@expo/vector-icons';
 import SearchScreen from "../screens/SearchScreen";
+import AddPostScreen from "../screens/AddPostScreen";
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -42,6 +43,17 @@ const TabNavigator = () => {
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Fontisto name="search" size={20} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AddPostScreen"
+        component={AddPostScreen}
+        options={{
+          title: "Tweet",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Fontisto name="paw" size={20} color={color} />
           ),
         }}
       />

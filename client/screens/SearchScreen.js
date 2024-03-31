@@ -17,9 +17,12 @@ const SearchScreen = ({navigation}) => {
     variables: { name: search },
   });
 
-  const onPress = (name) => {
-    navigation.navigate("ProfileSearch", {name})
+  const onPress = (data) => {
+    // console.log(data);
+    navigation.navigate("ProfileSearch", {data})
   }
+
+//   console.log(data?.userByName);
 
   return (
     <View className="bg-blue-950 h-screen w-screen">
@@ -37,7 +40,9 @@ const SearchScreen = ({navigation}) => {
       </View>
       <GestureHandlerRootView>
       {data?.userByName.map((el, i) => (
-          <TouchableOpacity onPress={{}}>
+          <TouchableOpacity onPress={()=> {
+            onPress(el)
+          }}>
             <ProfileCard profile={el} key={i} />
           </TouchableOpacity>
       ))}

@@ -1,14 +1,14 @@
-import React from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ActivityIndicator, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { Avatar, Image } from "react-native-elements";
-import CardComponent from "../components/CardComponent";
 import { useQuery } from "@apollo/client";
 import GET_PROFILE from "../query/GET_PROFILE";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import CardProfileComponent from "../components/CardProfileComponent";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Profile = ({ navigation }) => {
-  const {loading, error, data} = useQuery(GET_PROFILE)
+  const {loading, error, data, refetch} = useQuery(GET_PROFILE)
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -17,12 +17,22 @@ const Profile = ({ navigation }) => {
     );
   }
 
-  // if (error) {
-  //   return <Text>Error: {error.message}</Text>;
-  // }
-  // console.log(data);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, []);
+
+  const onPress = (id) => {
+    navigation.navigate("DetailPost", {id});
+  };
+  // console.log(data?.myProfile.userPost);
   return (
-    <ScrollView className="bg-blue-950 h-screen w-screen">
+    <ScrollView className="bg-blue-950 h-screen w-screen" refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <View className="border-y border-neutral-400">
         <View className="border">
           <Image
@@ -53,14 +63,19 @@ const Profile = ({ navigation }) => {
             </View>
           </View>
           <View className="flex flex-row justify-center items-center py-7">
-            <Text className="text-white px-1">999 Following</Text>
-            <Text className="text-white px-1">999 Follower</Text>
+            <Text className="text-white px-1">{data.myProfile.followings.length} Following</Text>
+            <Text className="text-white px-1">{data.myProfile.followers.length} Follower</Text>
           </View>
         </View>
       </View>
+      <GestureHandlerRootView>
       {data?.myProfile.userPost.map((post, i) => (
-        <CardProfileComponent post={post} name={data.myProfile.name} username={data.myProfile.username}/>
+        <TouchableOpacity onPress={() => onPress(post._id)}>
+          <CardProfileComponent post={post} name={data.myProfile.name} username={data.myProfile.username}/>
+        </TouchableOpacity>
       ))}
+
+      </GestureHandlerRootView>
     </ScrollView>
   );
 };
