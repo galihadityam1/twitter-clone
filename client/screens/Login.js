@@ -62,6 +62,7 @@ const Login = ({ navigation }) => {
                       placeholder="Enter Password"
                       onChangeText={setPassword}
                       value={password}
+                      secureTextEntry={true}
                     />
                     <View className="mr-6">
                       <Button title={"Login"} onPress={handleLogin} />

@@ -21,8 +21,8 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   const [isSignIn, setIsSignIn] = useState(false);
-//   console.log(useNavigation());
-//   const {navigate} = useNavigation()
+  //   console.log(useNavigation());
+  //   const {navigate} = useNavigation()
   (async () => {
     const accessToken = await SecureStorage.getItemAsync("accessToken");
     if (accessToken) {
@@ -67,7 +67,11 @@ const StackNavigator = () => {
         }}>
         {!isSignIn ? (
           <>
-            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="Register"
               component={Register}

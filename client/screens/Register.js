@@ -63,6 +63,7 @@ const Register = ({ navigation }) => {
                       placeholder="Enter Password"
                       onChangeText={setPassword}
                       value={password}
+                      secureTextEntry={true}
                     />
                     <Button title={"Submit"} onPress={() => {
                         addUser()
