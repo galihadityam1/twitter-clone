@@ -1,4 +1,4 @@
-import { View, Text, Linking, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Linking, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { Input } from "react-native-elements";
 import { Button } from "@rneui/themed";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -25,7 +25,7 @@ const Register = ({ navigation }) => {
         }
     })
   return (
-    <View className="flex flex-col items-center p-4 bg-slate-300 h-screen">
+    <ScrollView className="flex flex-col items-center p-4 bg-slate-300 h-screen">
       <View className="container max-w-full mx-auto py-24">
         <View className="max-w-sm mx-auto">
           <View className="relative flex flex-wrap">
@@ -91,7 +91,7 @@ const Register = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

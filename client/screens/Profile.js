@@ -9,13 +9,13 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Profile = ({ navigation }) => {
   const {loading, error, data, refetch} = useQuery(GET_PROFILE)
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <ActivityIndicator size="large" color={Colors.primary} />
+  //     </View>
+  //   );
+  // }
 
   const [refreshing, setRefreshing] = useState(false);
 

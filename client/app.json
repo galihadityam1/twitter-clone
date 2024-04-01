@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "cm.gc01.com"
     },
     "web": {
       "favicon": "./assets/favicon.png"
