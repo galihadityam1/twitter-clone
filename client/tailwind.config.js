@@ -10,6 +10,8 @@ module.exports = {
     "./screens/DetailPost.js",
     "./screens/SearchScreen.js",
     "./screens/AddPostScreen.js",
+    "./screens/FollowingScreen.js",
+    "./screens/FollowerScreen.js",
     "./components/CardComponent.js",
     "./components/CommentComponent.js",
     "./components/ProfileCard.js",

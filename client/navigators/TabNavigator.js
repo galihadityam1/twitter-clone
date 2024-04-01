@@ -72,6 +72,21 @@ const TabNavigator = () => {
           ),
         }}
       />
+      {/* <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="account-circle"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      /> */}
     </Tab.Navigator>
   );
 };

@@ -16,6 +16,9 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import client from "../config/apollo";
+import FollowerScreen from "../screens/FollowerScreen";
+import FollowingScreen from "../screens/FollowingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +46,7 @@ const StackNavigator = () => {
                 onPress={async () => {
                   await SecureStorage.deleteItemAsync("accessToken");
                   setIsSignIn(false);
+                  client.clearStore()
                   console.log("udh di delete", isSignIn);
                 }}
               />
@@ -85,6 +89,8 @@ const StackNavigator = () => {
             <Stack.Screen name="Profile" component={Profile} />
             <Stack.Screen name="ProfileSearch" component={ProfileSearch} />
             <Stack.Screen name="SearchScreen" component={SearchScreen} />
+            <Stack.Screen name="FollowerScreen" component={FollowerScreen} />
+            <Stack.Screen name="FollowingScreen" component={FollowingScreen} />
           </>
         )}
       </Stack.Navigator>
