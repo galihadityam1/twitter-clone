@@ -20,7 +20,7 @@ const DetailPost = ({ route }) => {
   });
 
 //   const loadingDetail = get_detail.loading;
-  const dataDetail = get_detail.data;
+  const dataDetail = get_detail?.data;
 //   if (loadingDetail) {
 //     return (
 //       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -32,10 +32,10 @@ const DetailPost = ({ route }) => {
   const [commentPost, { loading }] = useMutation(ADD_COMMENT, {
     variables: {
       content: comment,
-      id: dataDetail.getUser._id,
+      id: dataDetail?.getUser._id,
     },
     refetchQueries: [
-      { query: GET_DETAIL, variables: { id: dataDetail.getUser._id } },
+      { query: GET_DETAIL, variables: { id: dataDetail?.getUser._id } },
     ],
   });
 
@@ -50,8 +50,8 @@ const DetailPost = ({ route }) => {
   return (
     <>
       <ScrollView className="bg-blue-950 h-screen w-screen">
-        <CardComponent post={dataDetail.getUser} />
-        {dataDetail.getUser.comments.map((comment) => (
+        <CardComponent post={dataDetail?.getUser} />
+        {dataDetail?.getUser.comments.map((comment) => (
           <>
             <CommentComponent comment={comment} />
           </>

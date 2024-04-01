@@ -31,7 +31,7 @@ const ProfileSearch = ({ navigation, route }) => {
   });
 
   const onFollow = (idFollow) => {
-    // console.log(idFollow);
+    console.log(idFollow);
     followUser({
         variables: {idFollow}
     });

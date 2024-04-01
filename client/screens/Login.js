@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
     }
   };
   return (
-    <ScrollView className="flex flex-col items-center p-4 bg-slate-300 h-screen">
+    <View className="flex flex-col items-center p-4 bg-slate-300 h-screen">
       <View className="container max-w-full mx-auto py-24">
         <View className="max-w-sm mx-auto px-6">
           <View className="relative flex flex-wrap">
@@ -86,7 +86,7 @@ const Login = ({ navigation }) => {
           </View>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

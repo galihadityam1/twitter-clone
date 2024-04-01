@@ -8,19 +8,21 @@ import CardProfileComponent from "../components/CardProfileComponent";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Profile = ({ navigation }) => {
-  const {loading, error, data, refetch} = useQuery(GET_PROFILE)
-  // if (loading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //       <ActivityIndicator size="large" color={Colors.primary} />
-  //     </View>
-  //   );
-  // }
+  const {loading, error, data, refetch} = useQuery(GET_PROFILE, {
+    refetchQuueries: [{ query: GET_PROFILE}],
+  })
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(async () => {
-    setRefreshing(true);
+    // setRefreshing(true);
     await refetch();
     setRefreshing(false);
   }, []);

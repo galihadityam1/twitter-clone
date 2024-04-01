@@ -9,7 +9,7 @@ import {
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const CardComponent = ({ post }) => {
-  if(!post.authorDetail){
+  if(!post?.authorDetail){
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color={Colors.primary} />
