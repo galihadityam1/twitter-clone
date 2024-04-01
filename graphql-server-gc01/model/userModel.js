@@ -177,10 +177,10 @@ class User {
       if (followed) throw new GraphQLError("Already following this user");
 
       // follow myself
-      let user = await this.userCollection().findOne({
-        _id: new ObjectId(String(followerId)),
-      });
-      if (user) throw new GraphQLError("Cant follow yourself");
+      // let user = await this.userCollection().findOne({
+      //   _id: new ObjectId(String(followerId)),
+      // });
+      // if (user) throw new GraphQLError("Cant follow yourself");
 
       let follow = await this.followCollection().insertOne(newFollow);
 
